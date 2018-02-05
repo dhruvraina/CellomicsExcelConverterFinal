@@ -1,0 +1,93 @@
+%Description: Platemap Editor. Returns 8x12 matrix of treatment IDs to main
+%function
+% Author: Dhruv
+% Last Edit: 100415
+
+
+function varargout = pmap_ed(varargin)
+% PMAP_ED M-file for pmap_ed.fig
+%      PMAP_ED, by itself, creates a new PMAP_ED or raises the existing
+%      singleton*.
+%
+%      H = PMAP_ED returns the handle to a new PMAP_ED or the handle to
+%      the existing singleton*.
+%
+%      PMAP_ED('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in PMAP_ED.M with the given input arguments.
+%
+%      PMAP_ED('Property','Value',...) creates a new PMAP_ED or raises the
+%      existing singleton*.  Starting from the left, property value pairs are
+%      applied to the GUI before pmap_ed_OpeningFcn gets called.  An
+%      unrecognized property name or invalid value makes property application
+%      stop.  All inputs are passed to pmap_ed_OpeningFcn via varargin.
+%
+%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
+%      instance to run (singleton)".
+%
+% See also: GUIDE, GUIDATA, GUIHANDLES
+
+% Edit the above text to modify the response to help pmap_ed
+
+% Last Modified by GUIDE v2.5 12-Feb-2015 19:53:23
+
+% Begin initialization code - DO NOT EDIT
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @pmap_ed_OpeningFcn, ...
+                   'gui_OutputFcn',  @pmap_ed_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+% End initialization code - DO NOT EDIT
+
+
+% --- Executes just before pmap_ed is made visible.
+function pmap_ed_OpeningFcn(hObject, eventdata, handles, varargin)
+% This function has no output args, see OutputFcn.
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% varargin   command line arguments to pmap_ed (see VARARGIN)
+
+% Choose default command line output for pmap_ed
+handles.output = hObject;
+handles.pmap = zeros(8,12);
+% Update handles structure
+guidata(hObject, handles);
+
+% UIWAIT makes pmap_ed wait for user response (see UIRESUME)
+uiwait(handles.figure1);
+
+
+% --- Outputs from this function are returned to the command line.
+function varargout = pmap_ed_OutputFcn(hObject, eventdata, handles) 
+% varargout  cell array for returning output args (see VARARGOUT);
+% hObject    handle to figure
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get default command line output from handles structure
+varargout{1} = handles.pmap;
+delete(handles.figure1);
+
+% --- Executes on button press in pbt_go.
+function pbt_go_Callback(hObject, eventdata, handles)
+% hObject    handle to pbt_go (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+pmap_vals = str2double(get(handles.tab_pmap, 'data'));
+tvar1 = ~isnan(pmap_vals);
+handles.pmap(tvar1==1)=pmap_vals(tvar1==1);
+% platemap_savefile = handles.pmap;                                          %save doesn't recognize handles.pmap as a valid variable. :/
+% save([cd '\Platemap_save.mat'], 'platemap_savefile'); 
+guidata(hObject, handles);
+uiresume

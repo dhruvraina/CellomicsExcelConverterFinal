@@ -1,0 +1,17 @@
+%Takes in X values or Y Values, puts them into bins, and returns bin width
+
+function varargout = gscale(inVals, binno, matType)
+switch matType
+    case('cell')
+inValconcat = cell2mat(cellfun(@(x) max(x), inVals, 'UniformOutput', 0));
+inValconcat(inValconcat==max(inValconcat(:))) = 0;
+inValsubmax = max(inValconcat(:));
+% inValsubmax = cellfun(@(x) x(abs(size(x,1)-1)), inValconcat,  'UniformOutput', 0);
+% inValconcatlength = cell2mat(cellfun(@(x) length(x),  inVals,'UniformOutput', 0))-1;
+% inValconcatlength(inValconcatlength<0)=0;
+end
+binwidth = floor((inValsubmax/binno)*10)/10;
+binmax = inValsubmax;
+varargout{1} = binwidth;
+varargout{2} = binmax;
+%1. find the difference between the 98% and the 95% and compare it with the top 1percentile. If there is too big a spread, trim edge values
